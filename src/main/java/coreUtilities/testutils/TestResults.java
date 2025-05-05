@@ -4,8 +4,6 @@ public class TestResults {
 
 	private String testCaseResults;
 	private String customData;
-	private String hostName;
-	private String attemptId;
 
 	public String getTestCaseResults() {
 		return testCaseResults;
@@ -21,20 +19,6 @@ public class TestResults {
 
 	public void setCustomData(String customData) {
 		this.customData = customData;
-	}
-	public String getHostName() {
-		return hostName;
-	}
-
-	public void setHosttName(String hostName) {
-		this.hostName = hostName;
-	}
-	public String getAttemptId() {
-		return attemptId;
-	}
-
-	public void setAttemptId(String attemptId) {
-		this.attemptId = attemptId;
 	}
 
 }

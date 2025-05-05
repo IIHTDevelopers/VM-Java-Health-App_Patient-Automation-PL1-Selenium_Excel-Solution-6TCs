@@ -9,32 +9,32 @@ import org.openqa.selenium.WebElement;
 public class patient_Pages extends StartupPage {
 	
 //	TC-1 Locators
-	By usernameTextfield = null;
-	By usernameTextbox = null;
-	By passwordTextbox = null;
-	By signInButton = null;
-	By patientModuleByElement = null;
+	By usernameTextfield = By.id("username_id");
+	By usernameTextbox = By.xpath("//input[@id='username_id']");
+	By passwordTextbox = By.xpath("//input[@id='password']");
+	By signInButton = By.xpath("//button[@id='login']");
+	By patientModuleByElement = By.xpath("//a[@href='#/Patient']");
 //	TC-2 Locators
-	By patientModuleToggleIconByElement = null;
-	By searchPatientSubModuleByElement = null;
-	By registerPatientSubModuleByElement = null;
+	By patientModuleToggleIconByElement = By.xpath("//a[@href='#/Patient']//span[@data-target='#Patient']");
+	By searchPatientSubModuleByElement = By.xpath("//a[@href='#/Patient/SearchPatient']//span[contains(text(), 'Search Patient')]");
+	By registerPatientSubModuleByElement = By.xpath("//a[@href='#/Patient/RegisterPatient']//span[contains(text(), 'Register Patient')]");
 //	TC-3 Locators
-	By searchPatientTextboxByElement = null;
+	By searchPatientTextboxByElement = By.xpath("//input[@id='quickFilterInput']");
 //	TC-4 Locators
-	By cameraIconByElement = null;
-	By newPhotoButtonByElement = null;
-	By takeASnapShotButtonByElement = null;
-	By cancelButtonByElement = null;
+	By cameraIconByElement = By.xpath("//a[@title='Profile Picture']");
+	By newPhotoButtonByElement = By.xpath("//button[@class='btn blue btn-sm']");
+	By takeASnapShotButtonByElement = By.xpath("//button[@class='btn blue btn-sm']");
+	By cancelButtonByElement = By.xpath("//button[contains(text(), 'Cancel')]");
 //	TC-5 Locators
-	By basicInformationLinkByElement = null;
-	By regPatientSubmitButtonByElement = null;
-	By errorMessageOfPhoneNumberTextboxByElement = null;
+	By basicInformationLinkByElement = By.xpath("//a[contains(text(), 'Basic Information')]");
+	By regPatientSubmitButtonByElement = By.xpath("//input[@id='regPatientSubmitBtn']");
+	By errorMessageOfPhoneNumberTextboxByElement = By.xpath("//span[contains(text(), 'Primary Phone is required')]");
 //	TC-6 Locators
-	By firstNameTextboxByElement = null;
-	By middleNameTextboxByElement = null;
-	By lastNameTextboxByElement = null;
-	By ageTextboxByElement = null;
-	By phoneTextboxByElement = null;
+	By firstNameTextboxByElement = By.xpath("//input[@id='regPatFirstName']");
+	By middleNameTextboxByElement = By.xpath("//input[@placeholder='Middle Name']");
+	By lastNameTextboxByElement = By.xpath("//input[@id='LastName']");
+	By ageTextboxByElement = By.xpath("//input[@id='Age']");
+	By phoneTextboxByElement = By.xpath("//input[@id='PhoneNumber']");
 
 
 	String pageName = this.getClass().getSimpleName();
@@ -50,8 +50,34 @@ public class patient_Pages extends StartupPage {
 	 * @author : YAKSHA
 	 */
 	public boolean loginToHealthAppByGivenValidCredetial(Map<String, String> expectedData) throws Exception {
-		//write your logic here
-		return false;
+		Boolean textIsDisplayed = false;
+		try {
+			//			commonEvents.setBrowserZoomLevelTo80Percent();
+			commonEvents.waitTillElementLocated(usernameTextbox, 10);
+			WebElement usernametextFieldWebElement = commonEvents.findElement(usernameTextbox);
+			commonEvents.highlightElement(usernametextFieldWebElement);
+			commonEvents.sendKeys(usernameTextbox,expectedData.get("username"));
+
+			commonEvents.waitTillElementLocated(passwordTextbox, 10);
+			WebElement passwordtextFieldWebElement = commonEvents.findElement(passwordTextbox);
+			commonEvents.highlightElement(passwordtextFieldWebElement);
+			commonEvents.sendKeys(passwordTextbox,expectedData.get("password"));
+
+			commonEvents.waitTillElementLocated(signInButton, 20);
+			WebElement signinButtonWebElement = commonEvents.findElement(signInButton);
+			commonEvents.highlightElement(signinButtonWebElement);
+			commonEvents.jsClick(signInButton);
+
+			if(commonEvents.isDisplayed(patientModuleByElement))
+			{   
+				WebElement operationTheatreModuleWebElement = commonEvents.findElement(patientModuleByElement);
+				commonEvents.highlightElement(operationTheatreModuleWebElement);
+				textIsDisplayed=true;
+			}
+		}catch(Exception e) {
+			throw e;
+		}
+		return textIsDisplayed;
 	}
 
 	/**@Test1.2
@@ -62,8 +88,14 @@ public class patient_Pages extends StartupPage {
 	 * @author : YAKSHA
 	 */
 	public String verifyTitleOfThePage() throws Exception {
-		//write your logic here
-				return null;
+		String pageTitle = "";
+		try {
+			pageTitle = commonEvents.getTitle();
+			System.out.println("title of the page is  :" + pageTitle );
+		}catch(Exception e) {
+			throw e;
+		}	
+		return pageTitle;
 	}
 
 	/**@Test1.3
@@ -74,8 +106,15 @@ public class patient_Pages extends StartupPage {
 	 * @author : YAKSHA
 	 */
 	public String verifyURLOfThePage() throws Exception {
-		//write your logic here
-		return null;
+		String urlofThepage = "";
+		try {
+			Thread.sleep(5000);
+			urlofThepage = commonEvents.getCurrentUrl();
+			System.out.println("URL of the page is  :" + urlofThepage );
+		}catch(Exception e) {
+			throw e;
+		}	
+		return urlofThepage;
 	}
 
 	/**@Test2
@@ -86,8 +125,25 @@ public class patient_Pages extends StartupPage {
 	 * @author : YAKSHA
 	 */
 	public Boolean verifyAllPresenceOfFieldIfPatientModuleIsPresent() throws Exception {
-		//write your logic here
-				return false;
+		Boolean allFieldsAreDisplayed = false;
+		try {
+			commonEvents.waitTillElementLocated(patientModuleByElement, 10);
+			if(commonEvents.isDisplayed(patientModuleByElement)) {
+
+				commonEvents.jsClick(patientModuleToggleIconByElement);
+
+				if(commonEvents.isDisplayed(searchPatientSubModuleByElement) && 
+						commonEvents.isDisplayed(registerPatientSubModuleByElement)) {
+
+					System.out.println("all sub modules are present in patient module ");
+
+					allFieldsAreDisplayed = true;
+				}
+			}
+		}catch(Exception e) {
+			throw e;
+		}	
+		return allFieldsAreDisplayed;
 	}
 
 	/**@Test3
@@ -98,8 +154,23 @@ public class patient_Pages extends StartupPage {
 	 * @author : YAKSHA
 	 */
 	public String verifyPlaceholderNameOfTexbox() throws Exception {
-		//write your logic here
-		return null;
+		String placeholderNameOfTextbox = "";
+		try {
+			commonEvents.jsClick(searchPatientSubModuleByElement);
+
+			commonEvents.waitTillElementLocated(searchPatientTextboxByElement, 10);
+			if(commonEvents.isDisplayed(searchPatientTextboxByElement)) {
+
+				commonEvents.click(searchPatientTextboxByElement);
+				placeholderNameOfTextbox = commonEvents.getAttribute(searchPatientTextboxByElement, "placeholder");
+				System.out.println("place holder name of search patient Textbox : " + placeholderNameOfTextbox );
+
+				return placeholderNameOfTextbox;
+			}
+		}catch(Exception e) {
+			throw e;
+		}	
+		return placeholderNameOfTextbox;
 	}
 
 	/**@Test4
@@ -110,8 +181,37 @@ public class patient_Pages extends StartupPage {
 	 * @author : YAKSHA
 	 */
 	public Boolean verifyTakeASnapshotButtonIsPresent() throws Exception {
-		//write your logic here
-				return false;
+		Boolean buttonIsDisplayed = false;
+		try {
+
+			commonEvents.waitTillElementLocated(registerPatientSubModuleByElement, 10);
+
+			if(commonEvents.isDisplayed(registerPatientSubModuleByElement)) {
+
+				commonEvents.jsClick(registerPatientSubModuleByElement);
+
+				commonEvents.waitTillElementLocated(cameraIconByElement, 10);
+				commonEvents.jsClick(cameraIconByElement);
+
+				if(commonEvents.isDisplayed(newPhotoButtonByElement)) {
+
+					commonEvents.jsClick(newPhotoButtonByElement);
+					Thread.sleep(3000);
+
+					commonEvents.waitTillElementLocated(takeASnapShotButtonByElement, 10);
+					WebElement highLighttakeASnapShotButtonWebelement = commonEvents.findElement(takeASnapShotButtonByElement);
+					commonEvents.highlight(highLighttakeASnapShotButtonWebelement);
+
+					commonEvents.waitTillElementLocated(cancelButtonByElement, 10);
+					commonEvents.click(cancelButtonByElement);
+
+					buttonIsDisplayed = true;
+				}
+			}
+		}catch(Exception e) {
+			throw e;
+		}	
+		return buttonIsDisplayed;
 	}
 
 	/**@Test5
@@ -122,8 +222,27 @@ public class patient_Pages extends StartupPage {
 	 * @author : YAKSHA
 	 */
 	public String verifyErrorMessage() throws Exception {
-		//write your logic here
-		return null;
+		String errorMessage = "";
+		try {
+			Thread.sleep(5000);
+			commonEvents.waitTillElementLocated(basicInformationLinkByElement, 10);
+			if(commonEvents.isDisplayed(basicInformationLinkByElement)) {
+				commonEvents.click(basicInformationLinkByElement);
+
+				commonEvents.waitTillElementLocated(regPatientSubmitButtonByElement, 10);
+				commonEvents.click(regPatientSubmitButtonByElement);
+
+				commonEvents.waitTillElementLocated(errorMessageOfPhoneNumberTextboxByElement, 10);
+				commonEvents.isDisplayed(errorMessageOfPhoneNumberTextboxByElement);
+				errorMessage = commonEvents.getText(errorMessageOfPhoneNumberTextboxByElement);
+				System.out.println("error Message of Phone Number textbox : " + errorMessage );
+
+				return errorMessage;
+			}
+		}catch(Exception e) {
+			throw e;
+		}
+		return errorMessage;
 	}
 
 
@@ -136,8 +255,35 @@ public class patient_Pages extends StartupPage {
 	 */
 	public String verifyTextboxIsPresentAndValidateEnteredValue(Map<String, String> expectedData) throws Exception {
 
-		//write your logic here
-		return null;
+		String firstNameTextboxValue = "";
+		try {
+
+			commonEvents.waitTillElementLocated(basicInformationLinkByElement, 10);
+			if(commonEvents.isDisplayed(basicInformationLinkByElement)) {
+
+				commonEvents.waitTillElementLocated(firstNameTextboxByElement, 10);
+				commonEvents.sendKeys(firstNameTextboxByElement, expectedData.get("firstNameValue"));
+
+				commonEvents.waitTillElementLocated(middleNameTextboxByElement, 10);
+				commonEvents.sendKeys(middleNameTextboxByElement, expectedData.get("middleNameValue"));
+
+				commonEvents.waitTillElementLocated(lastNameTextboxByElement, 10);
+				commonEvents.sendKeys(lastNameTextboxByElement, expectedData.get("lastNameValue"));
+
+				commonEvents.waitTillElementLocated(ageTextboxByElement, 10);
+				commonEvents.sendKeys(ageTextboxByElement, expectedData.get("AgeValue"));
+
+				commonEvents.waitTillElementLocated(phoneTextboxByElement, 10);
+				commonEvents.sendKeys(phoneTextboxByElement, expectedData.get("phoneNumberValue"));
+
+				firstNameTextboxValue = commonEvents.getAttribute(firstNameTextboxByElement, "value");
+				System.out.println("attribute value of first Name Textbox : " + firstNameTextboxValue );
+				return firstNameTextboxValue;
+			}
+		}catch(Exception e) {
+			throw e;
+		}	
+		return firstNameTextboxValue;
 	}
 
 }
